@@ -1573,6 +1573,7 @@ unsafe fn wm_size(hwnd: HWND, _msg: UINT, _wparam: WPARAM, _lparam: LPARAM) -> O
         // -> NtUserSetWindowPos -> WM_WINDOWPOSCHANGED), causing a double-borrow
         // panic. Skipping the re-entrant call is safe: the outer borrow will
         // process the resize when it completes.
+        // Cherry-picked from PR #7721.
         if let Ok(mut inner) = inner.try_borrow_mut() {
             should_paint = inner.check_and_call_resize_if_needed();
             should_pump = inner.in_size_move;
